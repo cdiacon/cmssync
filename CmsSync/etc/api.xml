@@ -7,6 +7,15 @@
                 <title>Extended Customers API</title>
                 <acl>api</acl>
                 <methods>
+                    <is_enabled translate="title" module="calindiacon_cmssync">
+                        <title>Get Configuration status</title>
+                        <method>isEnabled</method>
+                        <acl>api/extended</acl>
+                    </is_enabled>
+                    <get_source translate="title" module="calindiacon_cmssync">
+                        <title>Get the source type</title>
+                        <method>getSource</method>
+                    </get_source>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>
                         <method>info</method>

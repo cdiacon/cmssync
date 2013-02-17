@@ -17,5 +17,15 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
     {
         return '1 from the custom option info action from api  ' . $args;
     }
+    public function isEnabled()
+    {
+        $enabled = Mage::getStoreConfig('cmssync/general/enabled');
+        return $enabled;
+    }
+    public function getSource()
+    {
+        return Mage::getStoreConfig('cmssync/general/source');
+    }
+
 
 }
