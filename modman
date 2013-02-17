@@ -1,2 +1,2 @@
 CmsSync app/code/community/CalinDiacon/CmsSync/
-app app/etc/modules/CalinDiacon.xml
+CalinDiacon.xml app/etc/modules/CalinDiacon.xml
