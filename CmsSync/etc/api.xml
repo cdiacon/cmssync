@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <api>
+        <resources>
+            <cms_api translate="title" module="calindiacon_cmssync">
+                <model>cmssync/objectmodel_api</model>
+                <title>Extended Customers API</title>
+                <acl>api</acl>
+                <methods>
+                    <info translate="title" module="calindiacon_cmssync">
+                        <title>Retrieve cutomers data with addresses</title>
+                        <method>info</method>
+                        <acl>api/extended</acl>
+                    </info>
+
+                </methods>
+            </cms_api>
+        </resources>
+        <!--        todo: add aliases-->
+        <!--<resources_alias>-->
+            <!--<config>config_api</config>-->
+        <!--</resources_alias>-->
+        <!--        todo: separate acl by resources -->
+        <acl>
+            <resources>
+                <api translate="title" module="calindiacon_cmssync">
+                    <title>* Extended API *</title>
+                    <sort_order>3</sort_order>
+                    <cmssync translate="title" module="calindiacon_cmssync">
+                        <title>Cms Sync API</title>
+                    </cmssync>
+                </api>
+            </resources>
+        </acl>
+    </api>
+</config>

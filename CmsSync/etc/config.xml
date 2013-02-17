@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <CalinDiacon_CmsSync>
+            <version>0.1.0</version>
+        </CalinDiacon_CmsSync>
+    </modules>
+    <global>
+        <models>
+            <cmssync>
+                <class>CalinDiacon_CmsSync_Model</class>
+            </cmssync>
+        </models>
+        <blocks>
+            <cmssync>
+                <class>CalinDiacon_CmsSync_Block</class>
+            </cmssync>
+            <adminhtml>
+                <rewrite>
+                    <cms_block_edit>CalinDiacon_CmsSync_Block_Adminhtml_Cms_Block_Edit</cms_block_edit>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+        <helpers>
+            <cd_cmssync>
+                <class>CalinDiacon_CmsSync_Helper</class>
+            </cd_cmssync>
+        </helpers>
+        <resources>
+            <cd_cmssync_setup>
+                <setup>
+                    <module>CalinDiacon_CmsSync</module>
+                </setup>
+            </cd_cmssync_setup>
+        </resources>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <calindiacon_cmssync before="Mage_Adminhtml">CalinDiacon_CmsSync_Adminhtml</calindiacon_cmssync>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+</config>

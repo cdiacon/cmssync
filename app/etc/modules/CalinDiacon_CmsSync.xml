@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <CalinDiacon_CmsSync>
+            <active>true</active>
+            <codePool>community</codePool>
+        </CalinDiacon_CmsSync>
+    </modules>
+</config>
