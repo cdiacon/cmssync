@@ -35,7 +35,7 @@
                         <source translate="label">
                             <label>Source</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>cd_cmssync/system_config_source_master</source_model>
+                            <source_model>cmssync/system_config_source_master</source_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
@@ -59,7 +59,7 @@
                         <urlone tranlate="label">
                             <label>First Node API url:</label>
                             <frontend_type>text</frontend_type>
-                            <comment>Enter the API url for the target. Ex. http://magentoshop.com/index.php/api/v2_soap?wsdl</comment>
+                            <comment>Enter the API url for the target. Ex. http://magentoshop.com/index.php/api/soap?wsdl</comment>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
