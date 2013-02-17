@@ -21,16 +21,16 @@
             <!--<config>config_api</config>-->
         <!--</resources_alias>-->
         <!--        todo: separate acl by resources -->
-        <acl>
-            <resources>
-                <api translate="title" module="calindiacon_cmssync">
-                    <title>* Extended API *</title>
-                    <sort_order>3</sort_order>
-                    <cmssync translate="title" module="calindiacon_cmssync">
-                        <title>Cms Sync API</title>
-                    </cmssync>
-                </api>
-            </resources>
-        </acl>
+        <!--<acl>-->
+            <!--<resources>-->
+                <!--<api translate="title" module="calindiacon_cmssync">-->
+                    <!--<title>* Extended API *</title>-->
+                    <!--<sort_order>3</sort_order>-->
+                    <!--<cmssync translate="title" module="calindiacon_cmssync">-->
+                        <!--<title>Cms Sync API</title>-->
+                    <!--</cmssync>-->
+                <!--</api>-->
+            <!--</resources>-->
+        <!--</acl>-->
     </api>
 </config>
