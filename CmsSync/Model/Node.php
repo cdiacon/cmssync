@@ -6,13 +6,13 @@
  * Time: 14:34
  * 
  */
-class CalinDiacon_CmsSync_Model_Node
+class CalinDiacon_CmsSync_Model_Node extends Mage_Core_Model_Abstract
 {
     protected  $_url;
     protected  $_username;
     protected  $_password;
-    public   $lastone = false;
-    public $isValid = true;
+    protected  $_isValid = true;
+    public     $lastone = false;
 
     public function setUrl($url)
     {
@@ -22,8 +22,9 @@ Mage::log('url validation result : ' . $result);
         if ($result){
             $this->_url = $url;
         }else{
-            $this->isValid = false;
+            $this->_isValid = false;
         }
+Mage::log('is valid for make request: ' . $this->isValid());
         return $this;
 
     }
@@ -38,6 +39,11 @@ Mage::log('url validation result : ' . $result);
     {
         $this->_password = $password;
         return $this;
+    }
+
+    public function isValid()
+    {
+        return $this->_isValid;
     }
 
     public function getUrl()

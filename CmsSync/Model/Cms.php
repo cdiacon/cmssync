@@ -8,8 +8,15 @@
  */
 class CalinDiacon_CmsSync_Model_Cms
 {
-    protected $blockId = false;
+    /**
+     * source if is master
+     * @var bool
+     */
     protected $isMaster = false;
+    /**
+     * source if is enabled
+     * @var bool
+     */
     protected $isEnabled = false;
     /**
      * Sync the static block
@@ -17,32 +24,30 @@ class CalinDiacon_CmsSync_Model_Cms
      */
     public function syncStaticBlock($blockId)
     {
-
         /**
          * verify the source and get nodes info
          **/
         $validNodes = $this->getEnabledNodes();
 
+        if($blockId && count($validNodes)){
 
+            $modelBlock = Mage::getModel('cms/block');
 
-        if($blockId){
-
-            $model = Mage::getModel('cms/block');
-
-            if(! $id = $model->load($blockId)){
+            if(! $id = $modelBlock->load($blockId)){
                 Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('This block no longer exists!'));
                 $this->_redirect('*/*');
                 return;
             }
 
-            $identifier = $model->getIdentifier();
-            $title = $model->getTitle();
-            $content = $model->getContent();
+            $identifier = $modelBlock->getIdentifier();
+            $title = $modelBlock->getTitle();
+            $content = $modelBlock->getContent();
 
-            $node1 = Mage::getStoreConfig('cmssync/general/urlone');
-            $username = Mage::getStoreConfig('cmssync/general/usernameone');
-            $passwordone = Mage::getStoreConfig('cmssync/general/passwordone');
+            foreach ($validNodes as $node) {
 
+                $new = $this->checkForNew($node);
+
+            }
 
 
             $node1 = "http://calin.wineglassworld.dev/index.php/api/soap/?wsdl=1";
@@ -78,10 +83,27 @@ class CalinDiacon_CmsSync_Model_Cms
 
             var_dump($data);
 
-            die;
+
+
+        }else{
+            Mage::throwException('No valid nodes or invalid block');
+        }
+
+    }
+    public function checkForNew($node)
+    {
+        $proxy = new Zend_Soap_Client($node->getUrl());
+        $sessionId = $proxy->login($node->getUsername(), $node->getPassword());
+
+        $isEnabled = $proxy->call($sessionId, 'cms_api.is_enabled');
+        $source = $proxy->call($sessionId, 'cms_api.get_source');
+
+        if ($isEnabled && ! $source){
 
 
         }
+
+        var_dump($source);die;
 
     }
 
@@ -111,19 +133,18 @@ class CalinDiacon_CmsSync_Model_Cms
                 $node->setUsername($username);
                 $node->setPassword($password);
 
-                if ($node->isValid){
+                if ($node->isValid()){
                     $nodeMapper->nodes[] = $node;
                 }
                 if (!$onemore)
                     break;
             }
-Mage::log('number of nodes : ' . $i);
-
+Mage::log('number of valid nodes : ' . count($nodeMapper));
         }else{
 
             Mage::throwException('The Source must be master and enabled!');
         }
-        return $nodeMapper;
+        return $nodeMapper->nodes;
     }
 
 

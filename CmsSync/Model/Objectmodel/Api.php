@@ -27,5 +27,24 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
         return Mage::getStoreConfig('cmssync/general/source');
     }
 
+    public function getBlockInfo($blockId)
+    {
+        $modelBlock = Mage::getModel('cms/block')->load($blockId);
+
+        return $modelBlock;
+
+
+    }
+    public function isNew($blockId)
+    {
+        $modelBlock = Mage::getModel('cms/block');
+
+        if ($modelBlock->load($blockId))
+            return true;
+        else
+            return false;
+
+    }
+
 
 }
