@@ -38,6 +38,7 @@ class CalinDiacon_CmsSync_Model_Cms
      * @var object
      */
     public $node;
+    public $identifier;
     public function syncStaticBlock($blockId)
     {
         /**
@@ -56,18 +57,19 @@ class CalinDiacon_CmsSync_Model_Cms
                 return;
             }
 
-            $identifier = $modelBlock->getIdentifier();
+            $this->identifier = $modelBlock->getIdentifier();
+
             $title = $modelBlock->getTitle();
             $content = $modelBlock->getContent();
 
             foreach ($validNodes as $node) {
 
                 $this->node = $node;
-                $new = $this->checkForNew();
-                if ($new){
-Mage::log('found new remote block  ' . $node->getUrl());
+                $noRemoteFound = $this->remoteExists();
+                if ($noRemoteFound){
+Mage::log('no remote block found : ' . $node->getUrl());
                 }else{
-Mage::log('this block id already exists: ' . $node->getUrl());
+Mage::log('this block: ' . $this->identifier . ',  already exists: ' . $node->getUrl());
                     //@todo make the block an object and then compare
 
                     $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->blockId);// array of info for the remote block
@@ -125,7 +127,7 @@ Mage::log($remoteBlock);
      * and cancel if the node is disabled
      * @return bool
      */
-    public function checkForNew()
+    public function remoteExists()
     {
         $this->prepareConnection();
 
@@ -134,16 +136,17 @@ Mage::log($remoteBlock);
 
         if ($isEnabled && ! $source){
 
-            $isNew = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->blockId);
-
+            $isNew = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier);
+Mage::log('looking for the identifier : ' . $this->identifier);
             if ($isNew){
 
-                return true;
-            }else{
                 return false;
+            }else{
+                return true;
             }
 
         }else{
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled!'));
             Mage::throwException('The remote node is not enabled stop furthe actions');
         }
 

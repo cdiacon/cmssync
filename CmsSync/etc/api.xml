@@ -22,7 +22,7 @@
                     </block_info>
                     <block_is_new translate="title" module="calindiacon_cmssync">
                         <title>Check if block is new</title>
-                        <method>isNew</method>
+                        <method>checkBlockExists</method>
                     </block_is_new>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>

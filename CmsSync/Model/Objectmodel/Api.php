@@ -46,7 +46,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      * @param $identifier
      * @return int
      */
-    public function isNew($identifier)
+    public function checkBlockExists($identifier)
     {
         $collection = Mage::getModel('cms/block')->getCollection()
             ->addFilter('identifier' , $identifier);
