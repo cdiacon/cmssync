@@ -48,9 +48,7 @@ class CalinDiacon_CmsSync_Model_Cms
         if($blockId && count($validNodes)){
 
             $this->blockId = $blockId;
-
             $modelBlock = Mage::getModel('cms/block');
-
 
             if(! $id = $modelBlock->load($blockId)){
                 Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('This block no longer exists!'));
@@ -65,7 +63,6 @@ class CalinDiacon_CmsSync_Model_Cms
             foreach ($validNodes as $node) {
 
                 $this->node = $node;
-Mage::log(' checking for new remote node...');
                 $new = $this->checkForNew();
                 if ($new){
 Mage::log('found new remote block  ' . $node->getUrl());

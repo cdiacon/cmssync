@@ -43,18 +43,15 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
 
     /**
      * check if the block exists in remote
-     * @param $blockId
-     * @return bool
+     * @param $identifier
+     * @return int
      */
-    public function isNew($blockId)
+    public function isNew($identifier)
     {
-        $modelBlock = Mage::getModel('cms/block');
+        $collection = Mage::getModel('cms/block')->getCollection()
+            ->addFilter('identifier' , $identifier);
 
-        if ($modelBlock->load($blockId)->getData())
-            return true;
-        else
-            return false;
-
+        return $collection->getSize();
     }
 
 
