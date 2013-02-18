@@ -22,6 +22,22 @@ class CalinDiacon_CmsSync_Model_Cms
      * Sync the static block
      * @param $blockId
      */
+    public $blockId ;
+    /**
+     * soap client
+     * @var object
+     */
+    protected $proxy;
+    /**
+     * session key
+     * @var string
+     */
+    protected $sessionId;
+    /**
+     * node configuration info
+     * @var object
+     */
+    public $node;
     public function syncStaticBlock($blockId)
     {
         /**
@@ -31,7 +47,10 @@ class CalinDiacon_CmsSync_Model_Cms
 
         if($blockId && count($validNodes)){
 
+            $this->blockId = $blockId;
+
             $modelBlock = Mage::getModel('cms/block');
+
 
             if(! $id = $modelBlock->load($blockId)){
                 Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('This block no longer exists!'));
@@ -45,7 +64,20 @@ class CalinDiacon_CmsSync_Model_Cms
 
             foreach ($validNodes as $node) {
 
-                $new = $this->checkForNew($node);
+                $this->node = $node;
+Mage::log(' checking for new remote node...');
+                $new = $this->checkForNew();
+                if ($new){
+Mage::log('found new remote block  ' . $node->getUrl());
+                }else{
+Mage::log('this block id already exists: ' . $node->getUrl());
+                    //@todo make the block an object and then compare
+
+                    $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->blockId);// array of info for the remote block
+
+Mage::log($remoteBlock);
+                    die;
+                }
 
             }
 
@@ -90,21 +122,48 @@ class CalinDiacon_CmsSync_Model_Cms
         }
 
     }
-    public function checkForNew($node)
-    {
-        $proxy = new Zend_Soap_Client($node->getUrl());
-        $sessionId = $proxy->login($node->getUsername(), $node->getPassword());
 
-        $isEnabled = $proxy->call($sessionId, 'cms_api.is_enabled');
-        $source = $proxy->call($sessionId, 'cms_api.get_source');
+    /**
+     * check the remote node block
+     * and cancel if the node is disabled
+     * @return bool
+     */
+    public function checkForNew()
+    {
+        $this->prepareConnection();
+
+        $isEnabled = $this->proxy->call($this->sessionId, 'cms_api.is_enabled');// 0 - disabled
+        $source = $this->proxy->call($this->sessionId, 'cms_api.get_source');// 0 - node ; 1 - master
 
         if ($isEnabled && ! $source){
 
+            $isNew = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->blockId);
 
+            if ($isNew){
+
+                return true;
+            }else{
+                return false;
+            }
+
+        }else{
+            Mage::throwException('The remote node is not enabled stop furthe actions');
         }
 
-        var_dump($source);die;
+    }
 
+    /**
+     * Connect to the current node
+     * @return bool
+     */
+    protected function prepareConnection()
+    {
+        $this->proxy = new Zend_Soap_Client($this->node->getUrl());
+        $this->sessionId = $this->proxy->login($this->node->getUsername(), $this->node->getPassword());
+        if ($this->sessionId)
+            return true;
+        else
+            return false;
     }
 
     /**

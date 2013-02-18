@@ -18,15 +18,12 @@ class CalinDiacon_CmsSync_Model_Node extends Mage_Core_Model_Abstract
     {
 Mage::log('setting url ...' . $url);
         $result = Zend_Uri::check($url);
-Mage::log('url validation result : ' . $result);
         if ($result){
             $this->_url = $url;
         }else{
             $this->_isValid = false;
         }
-Mage::log('is valid for make request: ' . $this->isValid());
         return $this;
-
     }
 
     public function setUsername($username)

@@ -27,19 +27,30 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
         return Mage::getStoreConfig('cmssync/general/source');
     }
 
+    /**
+     * get an array of block info
+     * @param $blockId
+     * @return mixed
+     */
     public function getBlockInfo($blockId)
     {
         $modelBlock = Mage::getModel('cms/block')->load($blockId);
 
-        return $modelBlock;
+        return $modelBlock->getData();
 
 
     }
+
+    /**
+     * check if the block exists in remote
+     * @param $blockId
+     * @return bool
+     */
     public function isNew($blockId)
     {
         $modelBlock = Mage::getModel('cms/block');
 
-        if ($modelBlock->load($blockId))
+        if ($modelBlock->load($blockId)->getData())
             return true;
         else
             return false;
