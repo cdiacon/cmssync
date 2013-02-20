@@ -48,6 +48,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      */
     public function checkBlockExists($data)
     {
+Mage::log($data);
         $identifier = $data['identifier'];
         $storeIds = $data['storeIds'];
 Mage::log('identifier : ' . $identifier);
