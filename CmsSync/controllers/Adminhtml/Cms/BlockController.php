@@ -4,7 +4,7 @@
  * User: cdiacon
  * Date: 04/02/2013
  * Time: 23:49
- * 
+ *
  */
 class CalinDiacon_CmsSync_Adminhtml_Cms_BlockController extends Mage_Adminhtml_Controller_Action
 {
@@ -20,23 +20,10 @@ class CalinDiacon_CmsSync_Adminhtml_Cms_BlockController extends Mage_Adminhtml_C
 
     protected function syncByBlockId($blockId = false)
     {
-        if($blockId){
 
-            $model = Mage::getModel('cms/block');
+        $cmsModel = new CalinDiacon_CmsSync_Model_Cms();
+        $cmsModel->syncStaticBlock($blockId);
 
-            if(! $id = $model->load($blockId)){
-                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cd_cmssync')->__('This block no longer exists!'));
-                $this->_redirect('*/*');
-                return;
-            }
-
-            $identifier = $model->getIdentifier();
-            $title = $model->getTitle();
-            $content = $model->getContent();
-
-
-
-        }
 
 
 

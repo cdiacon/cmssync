@@ -7,6 +7,23 @@
                 <title>Extended Customers API</title>
                 <acl>api</acl>
                 <methods>
+                    <is_enabled translate="title" module="calindiacon_cmssync">
+                        <title>Get Configuration status</title>
+                        <method>isEnabled</method>
+                        <acl>api/extended</acl>
+                    </is_enabled>
+                    <get_source translate="title" module="calindiacon_cmssync">
+                        <title>Get the source type</title>
+                        <method>getSource</method>
+                    </get_source>
+                    <block_info translate="title" module="calindiacon_cmssync">
+                        <title>Get block info by id</title>
+                        <method>getBlockInfo</method>
+                    </block_info>
+                    <block_is_new translate="title" module="calindiacon_cmssync">
+                        <title>Check if block is new</title>
+                        <method>checkBlockExists</method>
+                    </block_is_new>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>
                         <method>info</method>
@@ -21,16 +38,16 @@
             <!--<config>config_api</config>-->
         <!--</resources_alias>-->
         <!--        todo: separate acl by resources -->
-        <acl>
-            <resources>
-                <api translate="title" module="calindiacon_cmssync">
-                    <title>* Extended API *</title>
-                    <sort_order>3</sort_order>
-                    <cmssync translate="title" module="calindiacon_cmssync">
-                        <title>Cms Sync API</title>
-                    </cmssync>
-                </api>
-            </resources>
-        </acl>
+        <!--<acl>-->
+            <!--<resources>-->
+                <!--<api translate="title" module="calindiacon_cmssync">-->
+                    <!--<title>* Extended API *</title>-->
+                    <!--<sort_order>3</sort_order>-->
+                    <!--<cmssync translate="title" module="calindiacon_cmssync">-->
+                        <!--<title>Cms Sync API</title>-->
+                    <!--</cmssync>-->
+                <!--</api>-->
+            <!--</resources>-->
+        <!--</acl>-->
     </api>
 </config>

@@ -22,16 +22,16 @@
             </adminhtml>
         </blocks>
         <helpers>
-            <cd_cmssync>
+            <cmssync>
                 <class>CalinDiacon_CmsSync_Helper</class>
-            </cd_cmssync>
+            </cmssync>
         </helpers>
         <resources>
-            <cd_cmssync_setup>
+            <cmssync_setup>
                 <setup>
                     <module>CalinDiacon_CmsSync</module>
                 </setup>
-            </cd_cmssync_setup>
+            </cmssync_setup>
         </resources>
     </global>
     <admin>

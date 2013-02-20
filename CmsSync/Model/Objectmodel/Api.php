@@ -17,5 +17,47 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
     {
         return '1 from the custom option info action from api  ' . $args;
     }
+    public function isEnabled()
+    {
+        $enabled = Mage::getStoreConfig('cmssync/general/enabled');
+        return $enabled;
+    }
+    public function getSource()
+    {
+        return Mage::getStoreConfig('cmssync/general/source');
+    }
+
+    /**
+     * get an array of block info
+     * @param $blockId
+     * @return mixed
+     */
+    public function getBlockInfo($blockId)
+    {
+        $modelBlock = Mage::getModel('cms/block')->load($blockId);
+
+        return $modelBlock->getData();
+
+
+    }
+
+    /**
+     * check if the block exists in remote
+     * @param $data array
+     * @return int
+     */
+    public function checkBlockExists($data)
+    {
+        $identifier = $data['identifier'];
+        $storeIds = $data['storeIds'];
+Mage::log('identifier : ' . $identifier);
+Mage::log($storeIds);
+        $collection = Mage::getModel('cms/block')->getCollection()
+            ->addFilter('identifier' , $identifier);
+Mage::log('identifier to search : ' . $identifier);
+Mage::log($collection->getData());
+        return $collection->getSize();
+    }
+
 
 }

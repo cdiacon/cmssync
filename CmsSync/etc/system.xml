@@ -35,7 +35,7 @@
                         <source translate="label">
                             <label>Source</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>cd_cmssync/system_config_source_master</source_model>
+                            <source_model>cmssync/system_config_source_master</source_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
@@ -45,7 +45,7 @@
                                 ]]>
                             </comment>
                         </source>
-                        <heading_one translate="label">
+                        <heading_1 translate="label">
                             <label>First Node: </label>
                             <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
                             <sort_order>30</sort_order>
@@ -55,11 +55,11 @@
                             <depends>
                                 <source>1</source>
                             </depends>
-                        </heading_one>
-                        <urlone tranlate="label">
+                        </heading_1>
+                        <url_1 tranlate="label">
                             <label>First Node API url:</label>
                             <frontend_type>text</frontend_type>
-                            <comment>Enter the API url for the target. Ex. http://magentoshop.com/index.php/api/v2_soap?wsdl</comment>
+                            <comment>Enter the API url for the target. Ex. http://magentoshop.com/index.php/api/soap?wsdl</comment>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -67,8 +67,8 @@
                             <depends>
                                 <source>1</source>
                             </depends>
-                        </urlone>
-                        <usernameone translate="label">
+                        </url_1>
+                        <username_1 translate="label">
                             <label>User Name</label>
                             <frontend_type>text</frontend_type>
                             <comment>soap user name</comment>
@@ -79,8 +79,8 @@
                             <depends>
                                 <source>1</source>
                             </depends>
-                        </usernameone>
-                        <passwordone translate="label">
+                        </username_1>
+                        <password_1 translate="label">
                             <label>API key</label>
                             <frontend_type>password</frontend_type>
                             <comment>api key</comment>
@@ -91,8 +91,8 @@
                             <depends>
                                 <source>1</source>
                             </depends>
-                        </passwordone>
-                        <overrideone translate="label">
+                        </password_1>
+                        <override_1 translate="label">
                             <label>Override data</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -104,7 +104,84 @@
                             <depends>
                                 <source>1</source>
                             </depends>
-                        </overrideone>
+                        </override_1>
+                        <onemore_1 translate="label">
+                            <label>One more source ?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                            <depends>
+                                <source>1</source>
+                            </depends>
+                        </onemore_1>
+                        <heading_2 translate="label">
+                            <label>Second Node: </label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <source>1</source>
+                                <onemore_1>1</onemore_1>
+                            </depends>
+                        </heading_2>
+                        <url_2 translate="label">
+                            <label>Second Node API url:</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Enter the API url for the target. Ex: http://magentoshop.com/index.php/api/soap?wsdl</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                            <depends>
+                                <source>1</source>
+                                <onemore_1>1</onemore_1>
+                            </depends>
+                        </url_2>
+                        <username_2 translate="label">
+                            <label>User Name</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>soap user name</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>110</sort_order>
+                            <depends>
+                                <source>1</source>
+                                <onemore_1>1</onemore_1>
+                            </depends>
+                        </username_2>
+                        <password_2 translate="label">
+                            <label>API key</label>
+                            <frontend_type>password</frontend_type>
+                            <comment>api key</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>120</sort_order>
+                            <depends>
+                                <source>1</source>
+                                <onemore_1>1</onemore_1>
+                            </depends>
+                        </password_2>
+                        <override_2 translate="label">
+                            <label>Override data</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>yes - override the source, no - skip already existing</comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>130</sort_order>
+                            <depends>
+                                <source>1</source>
+                                <onemore_1>1</onemore_1>
+                            </depends>
+                        </override_2>
                     </fields>
                 </general>
             </groups>
