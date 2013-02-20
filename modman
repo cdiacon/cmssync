@@ -1,2 +1,3 @@
 CmsSync app/code/community/CalinDiacon/CmsSync/
+Api.php app/code/community/CalinDiacon/CmsSync/Model/Objectmodel/Api.php
 CalinDiacon_CmsSync.xml app/etc/modules/CalinDiacon_CmsSync.xml
