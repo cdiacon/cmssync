@@ -43,15 +43,14 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
 
     /**
      * check if the block exists in remote
-     * @param $data array
-     * @return int
+     * @param $identifier string
+     * @param $storeIds array
+     * @return mixed
      */
-    public function checkBlockExists($data)
+    public function checkBlockExists($identifier, $storeIds)
     {
-Mage::log($data);
-        $identifier = $data['identifier'];
-        $storeIds = $data['storeIds'];
-Mage::log('identifier : ' . $identifier);
+
+Mage::log( $identifier);
 Mage::log($storeIds);
         $collection = Mage::getModel('cms/block')->getCollection()
             ->addFilter('identifier' , $identifier);
