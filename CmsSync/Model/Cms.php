@@ -27,6 +27,9 @@ class CalinDiacon_CmsSync_Model_Cms
      * soap client
      * @var object
      */
+    public $storeIds = array();
+    public $title ;
+    public $content;
     protected $proxy;
     /**
      * session key
@@ -58,9 +61,9 @@ class CalinDiacon_CmsSync_Model_Cms
             }
 
             $this->identifier = $modelBlock->getIdentifier();
-
-            $title = $modelBlock->getTitle();
-            $content = $modelBlock->getContent();
+            $this->storeIds = $modelBlock->getStoreId();
+            $this->title = $modelBlock->getTitle();
+            $this->content = $modelBlock->getContent();
 
             foreach ($validNodes as $node) {
 
@@ -136,9 +139,15 @@ Mage::log($remoteBlock);
 
         if ($isEnabled && ! $source){
 
-            $isNew = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier);
+            $data = array(
+                'identifier' => $this->identifier,
+                'storeIds' => $this->storeIds
+            );
+
+            $remoteExists = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier, array($this->storeIds));
 Mage::log('looking for the identifier : ' . $this->identifier);
-            if ($isNew){
+Mage::log('the actual responce :' . $remoteExists);
+            if ($remoteExists){
 
                 return false;
             }else{
