@@ -24,6 +24,10 @@
                         <title>Check if block is new</title>
                         <method>checkBlockExists</method>
                     </block_is_new>
+                    <block_create translate="title" module="calindiacon_cmssync">
+                        <title>Create new block</title>
+                        <mehtod>createBlock</mehtod>
+                    </block_create>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>
                         <method>info</method>
