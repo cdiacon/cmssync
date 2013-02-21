@@ -22,12 +22,16 @@
                     </block_info>
                     <block_is_new translate="title" module="calindiacon_cmssync">
                         <title>Check if block is new</title>
-                        <method>checkBlockExists</method>
+                        <method>checkForNewBlock</method>
                     </block_is_new>
                     <block_create translate="title" module="calindiacon_cmssync">
-                        <title>Create new block</title>
-                        <mehtod>createBlock</mehtod>
+                        <title>Check if bsdlock is new</title>
+                        <method>createBlock</method>
                     </block_create>
+                    <block_update translate="title" module="calindiacon_cmssync">
+                        <title>Update Block</title>
+                        <method>updateBlock</method>
+                    </block_update>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>
                         <method>info</method>

@@ -29,12 +29,12 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
 
     /**
      * get an array of block info
-     * @param $blockId
+     * @param $identifier
      * @return mixed
      */
-    public function getBlockInfo($blockId)
+    public function getBlockInfo($identifier)
     {
-        $modelBlock = Mage::getModel('cms/block')->load($blockId);
+        $modelBlock = Mage::getModel('cms/block')->load($identifier, 'identifier');
 
         return $modelBlock->getData();
 
@@ -43,31 +43,73 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
 
     /**
      * check if the block exists in remote
-     * @param $data array
+     * @param $identifier string
      * @return mixed
      */
-    public function checkBlockExists($data)
+    public function checkForNewBlock($identifier)
     {
-        $identifier = $data['identifier'];
-        $storeIds = $data['storeIds'];
 
-        $collection = Mage::getModel('cms/block')->getCollection()
-            ->addFilter('identifier' , $identifier)
-            ->addFieldToFilter('block_id', array('in' => $storeIds));
 
-Mage::log('identifier to search : ' . $identifier);
-Mage::log($storeIds);
-Mage::log($collection->getData());
-        return $collection->getSize();
+        $blockModel = Mage::getModel('cms/block')->load($identifier, 'identifier');
+
+
+        if ($blockModel){
+
+            return false;
+        }
+        return true;
     }
 
     /**
      * Create new block
      * @param $data
+     * @return Mage_Core_Model_Abstract
      */
     public function createBlock($data)
     {
-Mage::log($data);
+        if (!empty($data)){
+
+            $staticBlock = array(
+                'title' => $data['title'],
+                'identifier' => $data['identifier'],
+                'content' => $data['content'],
+                'store_id' => $data['store_id'],
+                'is_active' => $data['is_active']
+            );
+
+            $blockModel = Mage::getModel("cms/block");
+
+
+            $blockModel->setData($staticBlock);
+            $result = $blockModel->save();
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
+     * Update static block
+     * @param $data
+     * @return $this|bool
+     */
+    public function updateBlock($data)
+    {
+        $identifier = $data['identifier'];
+
+        $staticBlock = array(
+            'title' => $data['title'],
+            'content' => $data['content'],
+            'is_active' => $data['is_active']
+        );
+
+        $blockModel = Mage::getModel('cms/block')->load($identifier, 'identifier');
+
+        if($blockModel){
+            $blockModel->addData($staticBlock)->save();
+            return true;
+        }
+        return false;
 
     }
 
