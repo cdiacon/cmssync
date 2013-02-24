@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by Calin Diacon.
- * User: cdiacon
- * Date: 17/02/2013
- * Time: 18:35
- * 
- */
+
 class CalinDiacon_CmsSync_Model_Block
 {
     public $blockId;

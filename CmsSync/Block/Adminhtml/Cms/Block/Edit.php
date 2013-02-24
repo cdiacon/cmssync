@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by Calin Diacon.
- * User: cdiacon
- * Date: 04/02/2013
- * Time: 22:43
- * 
- */
+
 class CalinDiacon_CmsSync_Block_Adminhtml_Cms_Block_Edit extends Mage_Adminhtml_Block_Cms_Block_Edit
 {
 

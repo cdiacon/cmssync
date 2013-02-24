@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by Calin Diacon.
- * User: cdiacon
- * Date: 17/02/2013
- * Time: 14:08
- * 
- */
+
 class CalinDiacon_CmsSync_Model_Cms
 {
     /**
@@ -76,7 +70,6 @@ class CalinDiacon_CmsSync_Model_Cms
 
                 if ($isEnabled && ! $source){
                     if ($isNew){
-
                         /**
                          * Create remote blocks
                          */
@@ -95,8 +88,28 @@ class CalinDiacon_CmsSync_Model_Cms
 
                         }else{
 
-                            Mage::log('skipping the remote because is newer :'  .$this->node->override);
+                            Mage::log('skipping the remote because is newer :'  . $this->node->override);
                         }
+
+                    }
+                    /**
+                     * save all media from the content
+                     */
+                    preg_match_all('/<img.*src=.*url="(.*)"\}\}.*\/\>/', $modelBlock->getContent(), $matches);
+                    if (isset($matches[1])){
+                        $allMedia = $matches[1];
+
+                        foreach ($allMedia as $filename){
+                            $fileData = base64_encode(file_get_contents(Mage::getBaseDir('media') . DS . $filename));
+                            $data = array(
+                                'fileName' => $filename,
+                                'file' => $fileData
+                            );
+
+                            $this->proxy->call($this->sessionId, 'cms_api.block_media', array($data));
+
+                        }
+
 
                     }
                 }else{

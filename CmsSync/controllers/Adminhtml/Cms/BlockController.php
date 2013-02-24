@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by Calin Diacon.
- * User: cdiacon
- * Date: 04/02/2013
- * Time: 23:49
- *
- */
+
 class CalinDiacon_CmsSync_Adminhtml_Cms_BlockController extends Mage_Adminhtml_Controller_Action
 {
     protected $_nodes = array();
@@ -24,8 +18,9 @@ class CalinDiacon_CmsSync_Adminhtml_Cms_BlockController extends Mage_Adminhtml_C
         $cmsModel = new CalinDiacon_CmsSync_Model_Cms();
         $cmsModel->syncStaticBlock($blockId);
 
+        Mage::getSingleton('adminhtml/session')->addSuccess('All nodes was successfull updated.');
 
-
+        $this->_redirect('*/cms_block/index');
 
     }
 

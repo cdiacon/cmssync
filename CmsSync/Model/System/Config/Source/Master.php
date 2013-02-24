@@ -1,11 +1,5 @@
 <?php
-/**
- * Created by Calin Diacon.
- * User: cdiacon
- * Date: 27/01/2013
- * Time: 19:33
- * 
- */
+
 
 class CalinDiacon_CmsSync_Model_System_Config_Source_Master
 {
