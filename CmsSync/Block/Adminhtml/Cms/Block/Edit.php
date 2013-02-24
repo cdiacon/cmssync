@@ -19,11 +19,14 @@ class CalinDiacon_CmsSync_Block_Adminhtml_Cms_Block_Edit extends Mage_Adminhtml_
         $this->_updateButton('save', 'label', Mage::helper('cms')->__('Save Block'));
         $this->_updateButton('delete', 'label', Mage::helper('cms')->__('Delete Block'));
 
-        $this->_addButton('sync', array(
-            'label' => Mage::helper('adminhtml')->__('Sync Block to all nodes'),
-            'onclick' => 'setLocation(\''. $this->getUrl('*/*/sync') . 'block_id/' . $this->getRequest()->getParam('block_id') .  '\')',
-            'class' => 'sync'
-        ),-1,5);
+        $isMaster = Mage::getStoreConfig('cmssync/general/source');
+        if ($isMaster){
+            $this->_addButton('sync', array(
+                'label' => Mage::helper('adminhtml')->__('Sync Block to all nodes'),
+                'onclick' => 'setLocation(\''. $this->getUrl('*/*/sync') . 'block_id/' . $this->getRequest()->getParam('block_id') .  '\')',
+                'class' => 'sync'
+            ),-1,5);
+        }
 
 
         $this->_formScripts[] = "
@@ -49,7 +52,7 @@ class CalinDiacon_CmsSync_Block_Adminhtml_Cms_Block_Edit extends Mage_Adminhtml_
     public function getHeaderText()
     {
         if (Mage::registry('cms_block')->getId()) {
-            return Mage::helper('cms')->__("Edit Block '%s'", $this->htmlEscape(Mage::registry('cms_block')->getTitle()));
+            return Mage::helper('cms')->__("Edit Block '%s'", self::escapeHtml(Mage::registry('cms_block')->getTitle()));
         }
         else {
             return Mage::helper('cms')->__('New Block');
