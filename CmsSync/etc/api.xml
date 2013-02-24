@@ -32,6 +32,10 @@
                         <title>Update Block</title>
                         <method>updateBlock</method>
                     </block_update>
+                    <block_media translate="title" module="calindiacon_cmssync">
+                        <title>Update Media file</title>
+                        <method>createMedia</method>
+                    </block_media>
                     <info translate="title" module="calindiacon_cmssync">
                         <title>Retrieve cutomers data with addresses</title>
                         <method>info</method>

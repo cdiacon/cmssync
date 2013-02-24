@@ -121,5 +121,29 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
 
     }
 
+    /**
+     * @param $data
+     */
+    public function createMedia($data)
+    {
+        $fileName = $data['fileName'];
+        $file = base64_decode($data['file']);
+        $filePath = Mage::getBaseDir('media') . DS . $fileName;
+
+        if(! file_exists($filePath)){
+
+            try{
+
+                file_put_contents($filePath, $file);
+            }catch (Exception $e){
+                Mage::logException($e);
+            }
+
+        }
+
+Mage::log($fileName);
+    }
+
+
 
 }
