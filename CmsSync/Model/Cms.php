@@ -64,60 +64,42 @@ class CalinDiacon_CmsSync_Model_Cms
             $this->storeIds = $modelBlock->getStoreId();
             $this->title = $modelBlock->getTitle();
             $this->content = $modelBlock->getContent();
+            $this->updateTime = $modelBlock->getUpdateTime();
 
             foreach ($validNodes as $node) {
 
                 $this->node = $node;
-                $noRemoteFound = $this->remoteExists();
-                if ($noRemoteFound){
-Mage::log('no remote block found : ' . $node->getUrl());
+                $isNew = $this->checkForNewBlock();
+                if ($isNew){
+
+                    /**
+                     * Create remote blocks
+                     */
+                    $createdBlock = $this->proxy->call($this->sessionId, 'cms_api.block_create', array($modelBlock->getData()));
+
                 }else{
-Mage::log('this block: ' . $this->identifier . ',  already exists: ' . $node->getUrl());
+
                     //@todo make the block an object and then compare
 
-                    $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->blockId);// array of info for the remote block
+                    $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->identifier);// array of info for the remote block
+
+                    $isNewer = $this->isNewer($remoteBlock['update_time']);
+
+                    if($isNew){
+                        return;
+                    }else{
+
+                        $update = $this->proxy->call($this->sessionId, 'cms_api.block_update', array($modelBlock->getData()));
+
+                    }
+
+
 
 Mage::log($remoteBlock);
                     die;
                 }
 
             }
-
-
-            $node1 = "http://calin.wineglassworld.dev/index.php/api/soap/?wsdl=1";
-
-            $options["connection_timeout"] = 255;
-            $options["location"] = $node1;
-            $options['trace'] = 1;
-
-
-
-            $proxy = new Zend_Soap_Client($node1);
-            $sessionId = $proxy->login('admin', 'admin123');
-            $email = 'cdiacon@gmail.com';
-            $store = 0;
-
-            //$result = $proxy->catalogCategoryTree($sessionId);
-
-
-
-            //$proxy = new SoapClient($node1);
-            //$sessionId = $proxy->login($username, $passwordone);
-
-            //$data = $proxy->call($session, 'catalog.product_info', array(1));
-            //$data  = $proxy->catalogCategoryTree($sessionId);
-            $data = $proxy->call($sessionId , 'cms_api.info', 'THIS TEXT IS AWSOME!!!');//, array(1));// array($email, $store));
-//$data=  $proxy->call($sessionId, 'customer.list', array(array()));
-
-
-            //$data = $proxy->call($sessionId, 'config.api/get', array());
-
-
-
-
-            var_dump($data);
-
-
 
         }else{
             Mage::throwException('No valid nodes or invalid block');
@@ -130,7 +112,7 @@ Mage::log($remoteBlock);
      * and cancel if the node is disabled
      * @return bool
      */
-    public function remoteExists()
+    public function checkForNewBlock()
     {
         $this->prepareConnection();
 
@@ -139,26 +121,17 @@ Mage::log($remoteBlock);
 
         if ($isEnabled && ! $source){
 
-            $data = array(
-                'identifier' => $this->identifier,
-                'storeIds' => $this->storeIds
-            );
-
-            $remoteExists = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier, array($this->storeIds));
-Mage::log('looking for the identifier : ' . $this->identifier);
-Mage::log('the actual responce :' . $remoteExists);
+            $remoteExists = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier);
             if ($remoteExists){
 
-                return false;
-            }else{
                 return true;
             }
 
         }else{
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled!'));
+            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled or is using different store!'));
             Mage::throwException('The remote node is not enabled stop furthe actions');
         }
-
+        return false;
     }
 
     /**
@@ -213,6 +186,17 @@ Mage::log('number of valid nodes : ' . count($nodeMapper));
             Mage::throwException('The Source must be master and enabled!');
         }
         return $nodeMapper->nodes;
+    }
+
+    public function isNewer($remoteUpdateTime)
+    {
+        $remoteTime = new Zend_Date($remoteUpdateTime);
+        $localTime = new Zend_Date($this->updateTime);
+
+        if($remoteTime->isLater($localTime)){
+            return true;
+        };
+        return false;
     }
 
 
