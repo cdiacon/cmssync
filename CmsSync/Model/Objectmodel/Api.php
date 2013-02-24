@@ -138,10 +138,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
             }catch (Exception $e){
                 Mage::logException($e);
             }
-
         }
-
-Mage::log($fileName);
     }
 
 
