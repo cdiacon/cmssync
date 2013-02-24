@@ -70,39 +70,44 @@ class CalinDiacon_CmsSync_Model_Cms
 
                 $this->node = $node;
                 $isNew = $this->checkForNewBlock();
-                if ($isNew){
 
-                    /**
-                     * Create remote blocks
-                     */
-                    $createdBlock = $this->proxy->call($this->sessionId, 'cms_api.block_create', array($modelBlock->getData()));
+                $isEnabled = $this->proxy->call($this->sessionId, 'cms_api.is_enabled');// 0 - disabled
+                $source = $this->proxy->call($this->sessionId, 'cms_api.get_source');// 0 - node ; 1 - master
 
-                }else{
+                if ($isEnabled && ! $source){
+                    if ($isNew){
 
-                    //@todo make the block an object and then compare
+                        /**
+                         * Create remote blocks
+                         */
+                        $createdResult = $this->proxy->call($this->sessionId, 'cms_api.block_create', array($modelBlock->getData()));
 
-                    $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->identifier);// array of info for the remote block
-
-                    $isNewer = $this->isNewer($remoteBlock['update_time']);
-
-                    if($isNew){
-                        return;
                     }else{
 
-                        $update = $this->proxy->call($this->sessionId, 'cms_api.block_update', array($modelBlock->getData()));
+                        //@todo make the block an object and then compare
+                        $remoteBlock = $this->proxy->call($this->sessionId, 'cms_api.block_info', $this->identifier);// array of info for the remote block
+
+                        $isLater = $this->isLater($remoteBlock['update_time']);
+
+                        if($isLater || $this->node->override){
+
+                            $this->proxy->call($this->sessionId, 'cms_api.block_update', array($modelBlock->getData()));
+
+                        }else{
+
+                            Mage::log('skipping the remote because is newer :'  .$this->node->override);
+                        }
 
                     }
-
-
-
-Mage::log($remoteBlock);
-                    die;
+                }else{
+                    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled or is using different store!'));
+                    Mage::throwException('The remote node is not enabled stop furthe actions');
                 }
 
             }
 
         }else{
-            Mage::throwException('No valid nodes or invalid block');
+            Mage::throwException('No valid nodes or invalid block.');
         }
 
     }
@@ -116,22 +121,15 @@ Mage::log($remoteBlock);
     {
         $this->prepareConnection();
 
-        $isEnabled = $this->proxy->call($this->sessionId, 'cms_api.is_enabled');// 0 - disabled
-        $source = $this->proxy->call($this->sessionId, 'cms_api.get_source');// 0 - node ; 1 - master
 
-        if ($isEnabled && ! $source){
+        $new = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier);
+        if ($new){
 
-            $remoteExists = $this->proxy->call($this->sessionId, 'cms_api.block_is_new', $this->identifier);
-            if ($remoteExists){
-
-                return true;
-            }
-
+            return true;
         }else{
-            Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled or is using different store!'));
-            Mage::throwException('The remote node is not enabled stop furthe actions');
+
+            return false;
         }
-        return false;
     }
 
     /**
@@ -169,10 +167,12 @@ Mage::log($remoteBlock);
                 $username = Mage::getStoreConfig('cmssync/general/username_' . $i);
                 $password = Mage::getStoreConfig('cmssync/general/password_' . $i);
                 $onemore = Mage::getStoreConfig('cmssync/general/onemore_'. $i);
+                $override = Mage::getStoreConfig('cmssync/general/override_'. $i);
 
                 $node->setUrl($url);
                 $node->setUsername($username);
                 $node->setPassword($password);
+                $node->setOverride($override);
 
                 if ($node->isValid()){
                     $nodeMapper->nodes[] = $node;
@@ -180,7 +180,6 @@ Mage::log($remoteBlock);
                 if (!$onemore)
                     break;
             }
-Mage::log('number of valid nodes : ' . count($nodeMapper));
         }else{
 
             Mage::throwException('The Source must be master and enabled!');
@@ -188,12 +187,16 @@ Mage::log('number of valid nodes : ' . count($nodeMapper));
         return $nodeMapper->nodes;
     }
 
-    public function isNewer($remoteUpdateTime)
+    /**
+     * check if remote has most updated info
+     * @param $remoteUpdateTime
+     * @return bool
+     */
+    public function isLater($remoteUpdateTime)
     {
         $remoteTime = new Zend_Date($remoteUpdateTime);
         $localTime = new Zend_Date($this->updateTime);
-
-        if($remoteTime->isLater($localTime)){
+        if($localTime->isLater($remoteTime)){
             return true;
         };
         return false;

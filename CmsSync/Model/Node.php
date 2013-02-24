@@ -13,14 +13,15 @@ class CalinDiacon_CmsSync_Model_Node extends Mage_Core_Model_Abstract
     protected  $_password;
     protected  $_isValid = true;
     public     $lastone = false;
+    public     $override = false;
 
     public function setUrl($url)
     {
-Mage::log('setting url ...' . $url);
         $result = Zend_Uri::check($url);
         if ($result){
             $this->_url = $url;
         }else{
+            Mage::getModel('adminhtml/session')->addError('Please enter a valide url!');
             $this->_isValid = false;
         }
         return $this;
