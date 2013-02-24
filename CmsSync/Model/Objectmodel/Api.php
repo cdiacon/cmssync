@@ -48,12 +48,9 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      */
     public function checkForNewBlock($identifier)
     {
-
-
         $blockModel = Mage::getModel('cms/block')->load($identifier, 'identifier');
 
-
-        if ($blockModel){
+        if ($blockModel->getBlockId()){
 
             return false;
         }
@@ -63,7 +60,8 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
     /**
      * Create new block
      * @param $data
-     * @return Mage_Core_Model_Abstract
+     * @return bool|Mage_Core_Model_Abstract
+     * @throws Exception
      */
     public function createBlock($data)
     {
@@ -73,16 +71,26 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
                 'title' => $data['title'],
                 'identifier' => $data['identifier'],
                 'content' => $data['content'],
+                'is_active' => $data['is_active'],
                 'store_id' => $data['store_id'],
-                'is_active' => $data['is_active']
+                'stores' => $data['stores']
             );
+            if($this->checkForNewBlock($data['identifier'])){
 
-            $blockModel = Mage::getModel("cms/block");
+                $blockModel = Mage::getModel("cms/block");
 
+                $blockModel->setData($staticBlock);
+                try{
 
-            $blockModel->setData($staticBlock);
-            $result = $blockModel->save();
-            return $result;
+                    $result = $blockModel->save();
+                    return $result;
+
+                }catch(Exception $e){
+                    Mage::logException($e);
+                }
+            }else{
+                throw new Exception('this block already exists, not saving...'  . $data['identifier']);
+            }
         }
 
         return false;
