@@ -28,11 +28,11 @@ class CalinDiacon_CmsSync_Model_Page extends CalinDiacon_CmsSync_Model_Abstract
                     $remotePage = $proxy->call($sessionId, 'cms_api.page_info', $pageModel->getIdentifier());// array of info for the remote block
 
                     if($remotePage){
-echo 'update page';
+
                         // update page
                         $proxy->call($sessionId, 'cms_api.page_update', array($pageModel->getData()));
                     }else{
-echo 'create page';
+
                         // create new block
                         $proxy->call($sessionId, 'cms_api.page_create', array($pageModel->getData()));
                     }
