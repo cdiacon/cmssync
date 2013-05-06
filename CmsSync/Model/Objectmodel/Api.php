@@ -34,11 +34,13 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      */
     public function getBlockInfo($identifier)
     {
-        $modelBlock = Mage::getModel('cms/block')->load($identifier);
+        $modelBlock = Mage::getModel('cms/block')->load($identifier, 'identifier');
 
-        return $modelBlock->getData();
+        if($modelBlock){
 
-
+            return $modelBlock->getData();
+        }
+        return false;
     }
 
     /**
@@ -48,7 +50,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      */
     public function checkForNewBlock($identifier)
     {
-        $blockModel = Mage::getModel('cms/block')->load($identifier);
+        $blockModel = Mage::getModel('cms/block')->load($identifier, 'identifier');
 
         if ($blockModel->getBlockId()){
 
