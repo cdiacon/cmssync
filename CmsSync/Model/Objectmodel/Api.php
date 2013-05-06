@@ -46,6 +46,25 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
     }
 
     /**
+     * get page info
+     * @param $identifier
+     * @return bool|mixed
+     */
+    public function getPageInfo($identifier)
+    {
+        if($this->isEnabled()){
+            $pageModel = Mage::getModel('cms/page')->load($identifier, 'identifier');
+
+            if($pageModel){
+
+                return $pageModel->getData();
+            }
+        }
+        return false;
+
+    }
+
+    /**
      * check if the block/page exists in remote
      * @param $identifier
      * @param string $model
