@@ -181,6 +181,36 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
         return $result;
     }
 
+    /**
+     * update page
+     * @param $data
+     * @return array|bool
+     */
+    public function updatePage($data)
+    {
+        $result = array('error' => false, 'message' => '');
+        $identifier = $data['identifier'];
+
+
+        $pageModel = Mage::getModel('cms/page')->load($identifier, 'identifier');
+
+        try{
+
+
+            if($pageModel){
+                $pageModel->addData($data)->save();
+                return true;
+            }
+        }catch(Exception $e){
+            $result['error'] = true;
+            $result['message'] = $e->getMessage();
+        }
+
+        return $result;
+
+    }
+
+
 
 
 

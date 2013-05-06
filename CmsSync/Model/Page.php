@@ -6,9 +6,9 @@
  * Time: 19:56
  * 
  */
-class CalinDiacon_CmsSync_Model_Page extends Mage_Core_Model_Abstract
+class CalinDiacon_CmsSync_Model_Page extends CalinDiacon_CmsSync_Model_Abstract
 {
-    public function sync($blockId)
+    public function sync($pageId)
     {
         $result = array('errors' => false, 'message' => "<br /><ul style='list-style-type: square;'>");
         // node models
@@ -16,7 +16,7 @@ class CalinDiacon_CmsSync_Model_Page extends Mage_Core_Model_Abstract
 
         if($nodes){
 
-            $blockModel = Mage::getModel('cms/block')->load($blockId);
+            $pageModel = Mage::getModel('cms/page')->load($pageId);
 
             // loop all nodes api
             foreach ($nodes as $node) {
@@ -25,21 +25,21 @@ class CalinDiacon_CmsSync_Model_Page extends Mage_Core_Model_Abstract
 
                     $proxy = new SoapClient($node->getUrl());
                     $sessionId = $proxy->login($node->getUsername(), $node->getPassword());
-                    $remoteBlock = $proxy->call($sessionId, 'cms_api.block_info', $blockModel->getIdentifier());// array of info for the remote block
+                    $remotePage = $proxy->call($sessionId, 'cms_api.page_info', $pageModel->getIdentifier());// array of info for the remote block
 
-                    if($remoteBlock){
+                    if($remotePage){
 
-                        // update block
-                        $proxy->call($sessionId, 'cms_api.block_update', array($blockModel->getData()));
+                        // update page
+                        $proxy->call($sessionId, 'cms_api.page_update', array($pageModel->getData()));
                     }else{
 
                         // create new block
-                        $proxy->call($sessionId, 'cms_api.block_create', array($blockModel->getData()));
+                        $proxy->call($sessionId, 'cms_api.page_create', array($pageModel->getData()));
                     }
                     /**
                      * save all media from the content
                      */
-                    preg_match_all('/<img.*src=.*url="(.*)"\}\}.*\/\>/', $blockModel->getContent(), $matches);
+                    preg_match_all('/<img.*src=.*url="(.*)"\}\}.*\/\>/', $pageModel->getContent(), $matches);
                     if (isset($matches[1])){
                         $allMedia = $matches[1];
 
@@ -50,11 +50,8 @@ class CalinDiacon_CmsSync_Model_Page extends Mage_Core_Model_Abstract
                                 'file' => $fileData
                             );
 
-                            $proxy->call($sessionId, 'cms_api.block_media', array($data));
-
+                            $proxy->call($sessionId, 'cms_api.page_media', array($data));
                         }
-
-
                     }
 
                 }catch(Exception $e){
