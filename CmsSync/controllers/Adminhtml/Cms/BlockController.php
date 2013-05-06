@@ -4,24 +4,25 @@ class CalinDiacon_CmsSync_Adminhtml_Cms_BlockController extends Mage_Adminhtml_C
 {
     protected $_nodes = array();
 
+
+
     public function syncAction()
     {
         $params = $this->getRequest()->getParams();
 
-        $this->syncByBlockId($params['block_id']);
+        if(isset($params['block_id'])){
 
-    }
+            // block id
+            $blockId = $params['block_id'];
 
-    protected function syncByBlockId($blockId = false)
-    {
+            $result = Mage::getModel('CalinDiacon_CmsSync_Model_Block')->sync($blockId);
 
-        $cmsModel = new CalinDiacon_CmsSync_Model_Cms();
-        $cmsModel->syncStaticBlock($blockId);
+            if($result['errors'])
+                Mage::getSingleton('adminhtml/session')->addError($result['message']);
 
-        Mage::getSingleton('adminhtml/session')->addSuccess('All nodes was successfull updated.');
+        }
 
-        $this->_redirect('*/cms_block/index');
-
+        $this->_redirectReferer();
     }
 
 

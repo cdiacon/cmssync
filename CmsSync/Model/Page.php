@@ -1,8 +1,13 @@
 <?php
-
-class CalinDiacon_CmsSync_Model_Block extends CalinDiacon_CmsSync_Model_Abstract
+/**
+ * Created by Calin Diacon.
+ * User: cdiacon
+ * Date: 05/05/2013
+ * Time: 19:56
+ * 
+ */
+class CalinDiacon_CmsSync_Model_Page extends Mage_Core_Model_Abstract
 {
-
     public function sync($blockId)
     {
         $result = array('errors' => false, 'message' => "<br /><ul style='list-style-type: square;'>");
@@ -68,6 +73,5 @@ class CalinDiacon_CmsSync_Model_Block extends CalinDiacon_CmsSync_Model_Abstract
         return $result;
 
     }
-
 
 }

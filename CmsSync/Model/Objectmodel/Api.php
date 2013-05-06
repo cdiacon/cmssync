@@ -4,7 +4,7 @@
  * User: cdiacon
  * Date: 27/01/2013
  * Time: 22:12
- * 
+ *
  */
 class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_Abstract
 {
@@ -19,7 +19,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
     }
     public function isEnabled()
     {
-        $enabled = Mage::getStoreConfig('cmssync/general/enabled');
+        $enabled = Mage::getStoreConfig(CalinDiacon_CmsSync_Model_Constants::CMSSYNC_ENABLE);
         return $enabled;
     }
     public function getSource()
@@ -34,25 +34,28 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
      */
     public function getBlockInfo($identifier)
     {
-        $modelBlock = Mage::getModel('cms/block')->load($identifier, 'identifier');
+        if($this->isEnabled()){
+            $modelBlock = Mage::getModel('cms/block')->load($identifier, 'identifier');
 
-        if($modelBlock){
+            if($modelBlock){
 
-            return $modelBlock->getData();
+                return $modelBlock->getData();
+            }
         }
         return false;
     }
 
     /**
-     * check if the block exists in remote
-     * @param $identifier string
-     * @return mixed
+     * check if the block/page exists in remote
+     * @param $identifier
+     * @param string $model
+     * @return bool
      */
-    public function checkForNewBlock($identifier)
+    public function checkForNew($identifier, $model = 'page')
     {
-        $blockModel = Mage::getModel('cms/block')->load($identifier, 'identifier');
+        $blockModel = Mage::getModel('cms/' . $model)->load($identifier, 'identifier');
 
-        if ($blockModel->getBlockId()){
+        if ($blockModel->getId()){
 
             return false;
         }
@@ -77,7 +80,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
                 'store_id' => $data['store_id'],
                 'stores' => $data['stores']
             );
-            if($this->checkForNewBlock($data['identifier'])){
+            if($this->checkForNew($data['identifier'], 'block')){
 
                 $blockModel = Mage::getModel("cms/block");
 
@@ -91,7 +94,7 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
                     Mage::logException($e);
                 }
             }else{
-                throw new Exception('this block already exists, not saving...'  . $data['identifier']);
+                throw new Exception('this block already exists, not sav ng...'  . $data['identifier']);
             }
         }
 
@@ -141,7 +144,43 @@ class CalinDiacon_CmsSync_Model_ObjectModel_Api extends Mage_Api_Model_Resource_
                 Mage::logException($e);
             }
         }
+
     }
+
+    /**
+     * create new page
+     * @param $data
+     * @return array
+     */
+    public function createPage($data)
+    {
+        $result = array('errors' => false, 'message' => '');
+        $identifier = $data['identifier'];
+
+        if (!empty($data)){
+
+            if($this->checkForNew($identifier, 'page')){
+
+                try{
+                    $blockModel = Mage::getModel("cms/page");
+                    $blockModel->setData($data);
+
+                    $blockModel->save();
+
+                }catch(Exception $e){
+                    Mage::logException($e);
+                    $result['errors'] = true;
+                    $result['message'] = 'error saving the page model';
+                }
+            }else{
+                $result['errors'] = true;
+                $result['message'] = 'the page already exists ' . $data[$identifier];
+            }
+        }
+
+        return $result;
+    }
+
 
 
 

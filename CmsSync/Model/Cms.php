@@ -1,41 +1,8 @@
 <?php
 
-class CalinDiacon_CmsSync_Model_Cms
+class CalinDiacon_CmsSync_Model_Cms extends CalinDiacon_CmsSync_Model_Abstract
 {
-    /**
-     * source if is master
-     * @var bool
-     */
-    protected $isMaster = false;
-    /**
-     * source if is enabled
-     * @var bool
-     */
-    protected $isEnabled = false;
-    /**
-     * Sync the static block
-     * @param $blockId
-     */
-    public $blockId ;
-    /**
-     * soap client
-     * @var object
-     */
-    public $storeIds = array();
-    public $title ;
-    public $content;
-    protected $proxy;
-    /**
-     * session key
-     * @var string
-     */
-    protected $sessionId;
-    /**
-     * node configuration info
-     * @var object
-     */
-    public $node;
-    public $identifier;
+
     public function syncStaticBlock($blockId)
     {
         /**
@@ -114,7 +81,7 @@ class CalinDiacon_CmsSync_Model_Cms
                     }
                 }else{
                     Mage::getSingleton('adminhtml/session')->addError(Mage::helper('cms')->__('Remote node is disabled or is using different store!'));
-                    Mage::throwException('The remote node is not enabled stop furthe actions');
+                    //Mage::throwException('The remote node is not enabled stop furthe actions');
                 }
 
             }
@@ -159,61 +126,7 @@ class CalinDiacon_CmsSync_Model_Cms
             return false;
     }
 
-    /**
-     *
-     * Get defined nodes to sync
-     * @return CalinDiacon_CmsSync_Model_NodeMapper
-     */
-    public function getEnabledNodes()
-    {
-        $this->isEnabled = (Mage::getStoreConfig('cmssync/general/enabled'))? Mage::getStoreConfig('cmssync/general/enabled')  : false;
-        $this->isMaster = (Mage::getStoreConfig('cmssync/general/source'))? Mage::getStoreConfig('cmssync/general/source') : false;
-        $nodeMapper = new CalinDiacon_CmsSync_Model_NodeMapper();
 
-        if ($this->isEnabled && $this->isMaster){
-
-            //@todo parse xml and get number of nodes
-            for($i = 1; $i <= 3;$i++){
-
-                $node = new CalinDiacon_CmsSync_Model_Node();
-                $url = Mage::getStoreConfig('cmssync/general/url_' . $i);
-                $username = Mage::getStoreConfig('cmssync/general/username_' . $i);
-                $password = Mage::getStoreConfig('cmssync/general/password_' . $i);
-                $onemore = Mage::getStoreConfig('cmssync/general/onemore_'. $i);
-                $override = Mage::getStoreConfig('cmssync/general/override_'. $i);
-
-                $node->setUrl($url);
-                $node->setUsername($username);
-                $node->setPassword($password);
-                $node->setOverride($override);
-
-                if ($node->isValid()){
-                    $nodeMapper->nodes[] = $node;
-                }
-                if (!$onemore)
-                    break;
-            }
-        }else{
-
-            Mage::throwException('The Source must be master and enabled!');
-        }
-        return $nodeMapper->nodes;
-    }
-
-    /**
-     * check if remote has most updated info
-     * @param $remoteUpdateTime
-     * @return bool
-     */
-    public function isLater($remoteUpdateTime)
-    {
-        $remoteTime = new Zend_Date($remoteUpdateTime);
-        $localTime = new Zend_Date($this->updateTime);
-        if($localTime->isLater($remoteTime)){
-            return true;
-        };
-        return false;
-    }
 
 
 }

@@ -18,6 +18,7 @@
             <adminhtml>
                 <rewrite>
                     <cms_block_edit>CalinDiacon_CmsSync_Block_Adminhtml_Cms_Block_Edit</cms_block_edit>
+                    <cms_page_edit>CalinDiacon_CmsSync_Block_Adminhtml_Cms_Page_Edit</cms_page_edit>
                 </rewrite>
             </adminhtml>
         </blocks>
@@ -36,14 +37,16 @@
     </global>
     <admin>
         <routers>
-            <adminhtml>
+            <cmssync>
+                <use>admin</use>
                 <args>
                     <modules>
                         <calindiacon_cmssync before="Mage_Adminhtml">CalinDiacon_CmsSync_Adminhtml</calindiacon_cmssync>
                     </modules>
+                    <module>CalinDiacon_CmsSync_Adminhtml</module>
+                    <frontName>cmssync</frontName>
                 </args>
-            </adminhtml>
+            </cmssync>
         </routers>
     </admin>
-
 </config>

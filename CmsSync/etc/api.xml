@@ -32,7 +32,7 @@
                         <method>getSource</method>
                     </get_source>
                     <block_info translate="title" module="calindiacon_cmssync">
-                        <title>Get block info by id</title>
+                        <title>Get block info by identifier</title>
                         <method>getBlockInfo</method>
                     </block_info>
                     <block_is_new translate="title" module="calindiacon_cmssync">
@@ -56,6 +56,18 @@
                         <method>info</method>
                         <acl>api/extended</acl>
                     </info>
+                    <page_info translate="title" module="calindiacon_cmssync">
+                        <title>Get info by identifier</title>
+                        <method>getPageInfo</method>
+                    </page_info>
+                    <page_update translate="title" module="calindiacon_cmssync">
+                        <title>Update page</title>
+                        <method>updatePage</method>
+                    </page_update>
+                    <page_create translate="title" module="calindiacon_cmssync">
+                        <title>Create new page</title>
+                        <method>createPage</method>
+                    </page_create>
 
                 </methods>
             </cms_api>
